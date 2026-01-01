@@ -1,8 +1,8 @@
 
 import React, { useState, useCallback } from 'react';
-import { ReportState, WeeklyTestInfo, StudentBasicInfo } from './types';
-import WeeklyForm from './components/WeeklyForm';
-import MonthlyReport from './components/MonthlyReport';
+import { ReportState, WeeklyTestInfo, StudentBasicInfo } from './types.ts';
+import WeeklyForm from './components/WeeklyForm.tsx';
+import MonthlyReport from './components/MonthlyReport.tsx';
 import { GoogleGenAI } from "@google/genai";
 
 const initialWeeklyData: WeeklyTestInfo[] = [
@@ -50,7 +50,11 @@ const App: React.FC = () => {
     setIsGeneratingAI(true);
     
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const apiKey = process.env.API_KEY;
+      if (!apiKey) {
+        throw new Error("API Key is missing");
+      }
+      const ai = new GoogleGenAI({ apiKey });
       const prompt = `
         학습 코칭 전문가로서 학생의 한 달 학습 리포트를 기반으로 종합 의견(코칭 코멘트)을 작성해줘.
         
@@ -102,27 +106,30 @@ const App: React.FC = () => {
     const element = document.getElementById('monthly-report-capture');
     if (!element) return;
     
-    // Smooth transition before capture
-    await new Promise(resolve => setTimeout(resolve, 300));
+    // @ts-ignore
+    const h2c = window.html2canvas;
+    if (!h2c) {
+      alert("이미지 캡처 라이브러리가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+    
+    await new Promise(resolve => setTimeout(resolve, 400));
 
     try {
-      // @ts-ignore
-      const canvas = await html2canvas(element, {
-        scale: 4, // Very high quality
+      const canvas = await h2c(element, {
+        scale: 4, 
         useCORS: true,
         backgroundColor: '#ffffff',
         logging: false,
-        onclone: (clonedDoc) => {
+        onclone: (clonedDoc: Document) => {
           const clonedElement = clonedDoc.getElementById('monthly-report-capture');
           if (clonedElement) {
-            // High fidelity conversion: Replace inputs with static text divs
             const inputs = clonedElement.querySelectorAll('input, textarea');
             inputs.forEach(input => {
               const typedInput = input as HTMLInputElement | HTMLTextAreaElement;
               const textNode = clonedDoc.createElement('div');
               textNode.innerText = typedInput.value;
               
-              // Copy essential styles for consistent look
               const styles = window.getComputedStyle(typedInput);
               textNode.style.fontSize = styles.fontSize;
               textNode.style.fontWeight = styles.fontWeight;
@@ -139,7 +146,6 @@ const App: React.FC = () => {
               
               typedInput.parentNode?.replaceChild(textNode, typedInput);
             });
-
             clonedElement.style.boxShadow = 'none';
           }
         }
@@ -200,7 +206,6 @@ const App: React.FC = () => {
       </header>
 
       <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-        {/* Left Side: Inputs */}
         <section className="no-print pb-20">
           <div className="space-y-4">
             <h2 className="text-2xl font-black mb-8 flex items-center gap-4 text-gray-900 italic">
@@ -222,7 +227,6 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        {/* Right Side: Preview */}
         <section>
           <div className="sticky top-8">
             <h2 className="text-2xl font-black mb-8 flex items-center gap-4 text-gray-900 italic no-print">
