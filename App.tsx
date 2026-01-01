@@ -1,8 +1,8 @@
 
 import React, { useState, useCallback } from 'react';
-import { ReportState, WeeklyTestInfo, StudentBasicInfo } from './types.ts';
-import WeeklyForm from './components/WeeklyForm.tsx';
-import MonthlyReport from './components/MonthlyReport.tsx';
+import { ReportState, WeeklyTestInfo, StudentBasicInfo } from './types';
+import WeeklyForm from './components/WeeklyForm';
+import MonthlyReport from './components/MonthlyReport';
 import { GoogleGenAI } from "@google/genai";
 
 const initialWeeklyData: WeeklyTestInfo[] = [
@@ -47,13 +47,16 @@ const App: React.FC = () => {
 
   const generateAIComment = async () => {
     if (isGeneratingAI) return;
+    
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      alert("API 키가 설정되지 않았습니다.");
+      return;
+    }
+
     setIsGeneratingAI(true);
     
     try {
-      const apiKey = process.env.API_KEY;
-      if (!apiKey) {
-        throw new Error("API Key is missing");
-      }
       const ai = new GoogleGenAI({ apiKey });
       const prompt = `
         학습 코칭 전문가로서 학생의 한 달 학습 리포트를 기반으로 종합 의견(코칭 코멘트)을 작성해줘.
@@ -117,7 +120,7 @@ const App: React.FC = () => {
 
     try {
       const canvas = await h2c(element, {
-        scale: 4, 
+        scale: 3, 
         useCORS: true,
         backgroundColor: '#ffffff',
         logging: false,
