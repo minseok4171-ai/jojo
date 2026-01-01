@@ -1,8 +1,7 @@
-
 import React, { useState, useCallback } from 'react';
-import { ReportState, WeeklyTestInfo, StudentBasicInfo } from './types';
-import WeeklyForm from './components/WeeklyForm';
-import MonthlyReport from './components/MonthlyReport';
+import { ReportState, WeeklyTestInfo, StudentBasicInfo } from './types.ts';
+import WeeklyForm from './components/WeeklyForm.tsx';
+import MonthlyReport from './components/MonthlyReport.tsx';
 import { GoogleGenAI } from "@google/genai";
 
 const initialWeeklyData: WeeklyTestInfo[] = [

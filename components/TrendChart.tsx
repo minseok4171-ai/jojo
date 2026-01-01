@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { WeeklyTestInfo } from '../types';
+import { WeeklyTestInfo } from '../types.ts';
 
 interface TrendChartProps {
   data: WeeklyTestInfo[];

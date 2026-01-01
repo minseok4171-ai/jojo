@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { WeeklyTestInfo, StudentBasicInfo } from '../types';
+import { WeeklyTestInfo, StudentBasicInfo } from '../types.ts';
 
 interface WeeklyFormProps {
   data: WeeklyTestInfo;

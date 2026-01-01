@@ -1,7 +1,6 @@
-
 import React from 'react';
-import { ReportState } from '../types';
-import TrendChart from './TrendChart';
+import { ReportState } from '../types.ts';
+import TrendChart from './TrendChart.tsx';
 
 interface MonthlyReportProps {
   state: ReportState;
